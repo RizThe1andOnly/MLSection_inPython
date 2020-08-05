@@ -75,4 +75,3 @@ def getFittedProbabilityVector(B,X,K):
         Pr(Y=k|X=xi;B)
     """
 
-
