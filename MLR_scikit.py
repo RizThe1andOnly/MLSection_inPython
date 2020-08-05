@@ -9,12 +9,47 @@ import sklearn.linear_model as lm
 def obatinDataFromCSV():
     """
         Get data from a CSV file
-    """
-    pass
 
-def splitData_TraningAndTest():
+        features include but not limited to:
+            "label","light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"
+
+            *Note: currently "label" is just a number from 1 -> n
+        
+        returns tuple containing:
+            - Numpy array: randomDataLabels
+            - Numpy array: randomDataFeatures
     """
-        Split obtained data with given ratio
+
+    randomData = pd.read_csv(filepath_or_buffer="RandomData.csv",header=1,usecols=["label","light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"])
+    randomDataLabels = randomData["label"].to_numpy()
+    randomDataFeatures = randomData["light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"].to_numpy()
+
+    return {randomDataLabels,randomDataFeatures}
+
+def splitData_TraningAndTest(randomDataLabels,randomDataFeatures):
+    """
+        Split obtained data with given ratio (7:3)
+        
+        Objective: create two arrays for labels and features, one set for features and one set for labels.
+            
+        Steps (Recommended):
+            1 - Get a list, size 70, of random numbers with the range 0:99 (inclusive)
+            2 - Create a numpy array with the random numbers above
+            3 - create a new numpy array consiting of entries from randomDataFeatures with indices
+                corresponding to the random numbers generated in step 2. Essentially 
+                numpy.append(arr,randomDataFeatures(randomNumber)) 
+            
+            This should create the training set. As for the test set, use a for loop to get all 
+            rows that weren't inserted into the training set into the test set.
+
+            Should return a tuple consisting of:
+                - Numpy Array : trainingSet_features
+                - Numpy Array : trainingSet_labels
+                - Numpy Array : testSet_features
+                - Numpy Array : testSet_labels
+            
+            *Note currently we are using size = 70 but that may be subject to change so create a 
+            variable and set it to 70 so that we can change it later.
     """
     pass
 
