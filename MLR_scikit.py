@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 import sklearn.linear_model as lm
 import matplotlib.pyplot as plt 
-from sklearn import cross validation
+#from sklearn import cross validation  #(brings up error, need to check package name)
+from sklearn.model_selection import train_test_split
 
 def obatinDataFromCSV():
     """
@@ -26,42 +27,17 @@ def obatinDataFromCSV():
     randomData = pd.read_csv(filepath_or_buffer="RandomData.csv",header=1,usecols=["label","light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"])
     randomDataLabels = randomData["label"].to_numpy()
     randomDataFeatures = randomData["light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"].to_numpy()
+    randomDataFeatures_Train, randomDataFeatures_Test, randomDataLabels_Train, randomDataLabels_Test = splitData_TrainingAndTest(randomDataLabels,randomDataFeatures)
 
-    return {randomDataLabels,randomDataFeatures}
+    return {randomDataFeatures_Train, randomDataFeatures_Test, randomDataLabels_Train, randomDataLabels_Test}
 
-def splitData_TraningAndTest(randomDataLabels,randomDataFeatures):
+def splitData_TrainingAndTest(randomDataLabels,randomDataFeatures):
     """
         Split obtained data with given ratio (7:3)
-        
-        Objective: create two arrays for labels and features, one set for features and one set for labels.
-            
-        Steps (Recommended):
-            1 - Get a list, size 70, of random numbers with the range 0:99 (inclusive)
-            2 - Create a numpy array with the random numbers above
-            3 - create a new numpy array consiting of entries from randomDataFeatures with indices
-                corresponding to the random numbers generated in step 2. Essentially 
-                numpy.append(arr,randomDataFeatures(randomNumber)) 
-            
-            This should create the training set. As for the test set, use a for loop to get all 
-            rows that weren't inserted into the training set into the test set.
-
-            Should return a tuple consisting of:
-                - Numpy Array : trainingSet_features 
-                - Numpy Array : trainingSet_labels
-                - Numpy Array : testSet_features
-                - Numpy Array : testSet_labels
-            
-            *Note currently we are using size = 70 but that may be subject to change so create a 
-            variable and set it to 70 so that we can change it later.
     """
+    randomDataFeatures_Train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test = train_test_split(randomDataFeatures,randomDataLabels, test_size = 0.3, random_state = 1)
 
-        dataset = pd.read_csv('processed.cleveland.data.csv')
-        randomDataFeatures = dataset.iloc[:,:-1].values
-        randomDataLabels = dataset.iloc[:,-1].values
-        from sklearn.model_selection import train_test_split
-        randomDataFeatures_Train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test = train_test_split(randomDataFeatures,randomDataLabels, test_size = 0.3, random_state = 1)
-        
-        return {randomDataFeatures_train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test}
+    return {randomDataFeatures_train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test}
        
 
 def fitData_withSciKit(X,y):
