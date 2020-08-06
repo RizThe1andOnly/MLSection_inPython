@@ -5,6 +5,8 @@
 import numpy as np
 import pandas as pd
 import sklearn.linear_model as lm
+import matplotlib.pyplot as plt 
+from sklearn import cross validation
 
 def obatinDataFromCSV():
     """
@@ -18,6 +20,7 @@ def obatinDataFromCSV():
         returns tuple containing:
             - Numpy array: randomDataLabels
             - Numpy array: randomDataFeatures
+            
     """
 
     randomData = pd.read_csv(filepath_or_buffer="RandomData.csv",header=1,usecols=["label","light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"])
@@ -43,7 +46,7 @@ def splitData_TraningAndTest(randomDataLabels,randomDataFeatures):
             rows that weren't inserted into the training set into the test set.
 
             Should return a tuple consisting of:
-                - Numpy Array : trainingSet_features
+                - Numpy Array : trainingSet_features 
                 - Numpy Array : trainingSet_labels
                 - Numpy Array : testSet_features
                 - Numpy Array : testSet_labels
@@ -51,7 +54,15 @@ def splitData_TraningAndTest(randomDataLabels,randomDataFeatures):
             *Note currently we are using size = 70 but that may be subject to change so create a 
             variable and set it to 70 so that we can change it later.
     """
-    pass
+
+        dataset = pd.read_csv('processed.cleveland.data.csv')
+        randomDataFeatures = dataset.iloc[:,:-1].values
+        randomDataLabels = dataset.iloc[:,-1].values
+        from sklearn.model_selection import train_test_split
+        randomDataFeatures_Train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test = train_test_split(randomDataFeatures,randomDataLabels, test_size = 0.3, random_state = 1)
+        
+        return {randomDataFeatures_train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test}
+       
 
 def fitData_withSciKit(X,y):
     """
