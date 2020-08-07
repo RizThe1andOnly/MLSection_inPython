@@ -8,6 +8,7 @@ import sklearn.linear_model as lm
 import matplotlib.pyplot as plt 
 #from sklearn import cross validation  #(brings up error, need to check package name)
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import log_loss #ce loss to calculate accuracy of the model
 
 def obatinDataFromCSV():
     """
@@ -24,20 +25,21 @@ def obatinDataFromCSV():
             
     """
 
-    randomData = pd.read_csv(filepath_or_buffer="RandomData.csv",header=1,usecols=["label","light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"])
+    randomData = pd.read_csv(filepath_or_buffer="RandomData.csv")
+    print(randomData)
     randomDataLabels = randomData["label"].to_numpy()
-    randomDataFeatures = randomData["light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSingal"].to_numpy()
+    randomDataFeatures = randomData[["light","sound","geoMag","cellTowerId","localAreaCode","cellTowerSignal"]].to_numpy()
     randomDataFeatures_Train, randomDataFeatures_Test, randomDataLabels_Train, randomDataLabels_Test = splitData_TrainingAndTest(randomDataLabels,randomDataFeatures)
 
-    return {randomDataFeatures_Train, randomDataFeatures_Test, randomDataLabels_Train, randomDataLabels_Test}
+    return (randomDataFeatures_Train, randomDataFeatures_Test, randomDataLabels_Train, randomDataLabels_Test)
 
 def splitData_TrainingAndTest(randomDataLabels,randomDataFeatures):
     """
         Split obtained data with given ratio (7:3)
     """
-    randomDataFeatures_Train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test = train_test_split(randomDataFeatures,randomDataLabels, test_size = 0.3, random_state = 1)
+    randomDataFeatures_train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test = train_test_split(randomDataFeatures,randomDataLabels, test_size = 0.3, random_state = 1)
 
-    return {randomDataFeatures_train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test}
+    return (randomDataFeatures_train, randomDataFeatures_test, randomDataLabels_train, randomDataLabels_test)
        
 
 def fitData_withSciKit(X,y):
@@ -72,3 +74,16 @@ def prediction(mlr_model,x):
         return obtained_predictions[0]
     
     return obtained_predictions #if multiple samples inputted then return the array and deal with ans in calling method
+
+def getError(y,y_prime):
+    return log_loss(y,y_prime)
+
+x_train,x_test,y_train,y_test = obatinDataFromCSV()
+mlModel = fitData_withSciKit(x_train,y_train)
+predictionArr = mlModel.predict_proba(x_train)
+errorVal = getError(y_train,predictionArr)
+
+print(errorVal)
+
+
+
